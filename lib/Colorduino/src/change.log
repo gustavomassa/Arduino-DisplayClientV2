@@ -1,0 +1,42 @@
+2018/09/07 DC v1.2.7
+- Colorduino.h - Remove all the inefficient digitalPinToBitMask() and digitalPinToPort(), 
+  which was causing the sketch to run very slow if compiled by later versions of Arduino.
+- Colorduino.cpp - Disable interrupts inside SetWhiteBal(), so the timer ISR can’t
+  come in at the same time, it will screw up the control signal timing.
+- Add a function to change the interrupt timer counter
+- Origin (0,0) is bottom left corner. When we update the LED driver in run(), channel 23 is 
+  the last shift register so we should start with column 7B-7G-7R... and ...1B-1G-1R last
+  You can use the REVERSE_ROWCHANNELS define to flip the columns.
+
+2016/12/12 SCL v1.2.6
+- Colorduino.h - fix C99 warning
+	
+2016/12/12 SCL v1.2.5
+- merged sbouba PR#9 - limit check Get/Set functions
+- change 0 to NULL
+	
+2012/07/12 SCL v1.2.4
+fixed bug in Mega support introduced in 1.2.3 (thanks wiltwong!)
+fixed a bug in close_lines() in Leonardo code (thanks Markus Lange)
+	
+2012/07/11 SCL v1.2.3
+added Leonardo support (thanks to Markus Lange)
+added ColorFill() to library
+	
+2012/07/07 SCL v1.2.2
+added Mega support (merged from wiltwong)
+
+2012/06/07 SCL v1.2.1
+fix compilation errors for Arduino v1.x
+
+2011/03/10 SCL lincomatic@hotmail.com v1.2
+take out superfluous cli/sei in ISR
+take out superfluous     TCCR2A |= (1 << WGM21) | (1 << WGM20);   in _T2C_Init()
+lower screen refresh rate from 100Hz to 80Hz
+	
+2011/03/06 SCL lincomatic@hotmail.com v1.1
+fixed bugs in coordinate system.  origin (0,0) is bottom left corner
+rearranged frame buffer for better performance
+
+2011/03/04 SCL lincomatic@hotmail.com v1.0
+Initial Release
