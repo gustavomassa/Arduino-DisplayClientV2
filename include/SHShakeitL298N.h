@@ -4,25 +4,32 @@
 #include <Arduino.h>
 #include "SHShakeitBase.h"
 
-class SHShakeitL298N : public SHShakeitBase {
+class SHShakeitL298N : public SHShakeitBase
+{
 private:
-	byte	pinL98N_enA;
-	byte	pinL98N_enB;
-	byte	pinL98N_in1;
-	byte	pinL98N_in2;
-	byte	pinL98N_in3;
-	byte	pinL98N_in4;
+	String L98N_name;
+	byte pinL98N_enA;
+	byte pinL98N_enB;
+	byte pinL98N_in1;
+	byte pinL98N_in2;
+	byte pinL98N_in3;
+	byte pinL98N_in4;
+
 public:
-	uint8_t motorCount() {
+	uint8_t motorCount()
+	{
 		return 2;
 	}
 
-	String providerName() {
-		return "L298N";
+	String providerName()
+	{
+		return L98N_name;
+		//return "L298N";
 	}
 
-	void begin(byte	pL98N_enA, byte	pL98N_enB, byte	pL98N_in1, byte	pL98N_in2, byte	pL98N_in3, byte	pL98N_in4) {
-
+	void begin(String pL98N_name, byte pL98N_enA, byte pL98N_enB, byte pL98N_in1, byte pL98N_in2, byte pL98N_in3, byte pL98N_in4)
+	{
+		L98N_name = pL98N_name;
 		pinL98N_enA = pL98N_enA;
 		pinL98N_enB = pL98N_enB;
 		pinL98N_in1 = pL98N_in1;
@@ -48,20 +55,27 @@ public:
 	}
 
 protected:
-	void setMotorOutput(uint8_t motorIdx, uint8_t value) {
-		if (motorIdx == 0) {
-			if (value == 0) {
+	void setMotorOutput(uint8_t motorIdx, uint8_t value)
+	{
+		if (motorIdx == 0)
+		{
+			if (value == 0)
+			{
 				digitalWrite(pinL98N_enA, LOW);
 			}
-			else {
+			else
+			{
 				analogWrite(pinL98N_enA, value);
 			}
 		}
-		else {
-			if (value == 0) {
+		else
+		{
+			if (value == 0)
+			{
 				digitalWrite(pinL98N_enB, LOW);
 			}
-			else {
+			else
+			{
 				analogWrite(pinL98N_enB, value);
 			}
 		}

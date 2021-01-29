@@ -593,7 +593,7 @@ SHShakeitDKMotorShield shShakeitDKMotorShield;
 // -------------------- SHAKEIT L298N BREAKOUT BOARD-- ----------------------------------------------------
 // https://github.com/zegreatclan/SimHub/wiki/Arduino-Shake-It
 // --------------------------------------------------------------------------------------------------------
-#define L98NMOTORS_ENABLED 1 //{"Group":"SHAKEIT L298N Motors Board","Name":"L98NMOTORS_ENABLED","Title":"L298N motor board enabled","DefaultValue":"0","Type":"bool"}
+#define L98NMOTORS_ENABLED 2 //{"Group":"SHAKEIT L298N Motors Board","Name":"L98NMOTORS_ENABLED","Title":"L298N motor board enabled","DefaultValue":"0","Type":"int","Max":2}
 #ifdef INCLUDE_SHAKEITL298N
 // Motor 1
 #define L98N_enA 10 //{"Name":"L98N_enA","Title":"ENA PWM pin","DefaultValue":"10","Type":"pin;L298N ENA","Condition":"L98NMOTORS_ENABLED>=1"}
@@ -603,8 +603,17 @@ SHShakeitDKMotorShield shShakeitDKMotorShield;
 #define L98N_enB 5 //{"Name":"L98N_enB","Title":"ENB PWM pin","DefaultValue":"5","Type":"pin;L298N ENB","Condition":"L98NMOTORS_ENABLED>=1"}
 #define L98N_in3 7 //{"Name":"L98N_in3","Title":"IN3 digital pin","DefaultValue":"7","Type":"pin;L298N IN3","Condition":"L98NMOTORS_ENABLED>=1"}
 #define L98N_in4 6 //{"Name":"L98N_in4","Title":"IN4 digital pin","DefaultValue":"6","Type":"pin;L298N IN4","Condition":"L98NMOTORS_ENABLED>=1"}
+// Motor 3
+#define L98N_enC 11 //{"Name":"L98N_enC","Title":"ENC PWM pin","DefaultValue":"11","Type":"pin;L298N ENA","Condition":"L98NMOTORS_ENABLED=2"}
+#define L98N_in5 12 //{"Name":"L98N_in5","Title":"IN1 digital pin","DefaultValue":"12","Type":"pin;L298N IN1","Condition":"L98NMOTORS_ENABLED=2"}
+#define L98N_in6 13 //{"Name":"L98N_in6","Title":"IN2 digital pin","DefaultValue":"13","Type":"pin;L298N IN2","Condition":"L98NMOTORS_ENABLED=2"}
+// motor 4
+#define L98N_enD 3 //{"Name":"L98N_enD","Title":"END PWM pin","DefaultValue":"3","Type":"pin;L298N ENB","Condition":"L98NMOTORS_ENABLED=2"}
+#define L98N_in7 4 //{"Name":"L98N_in7","Title":"IN3 digital pin","DefaultValue":"4","Type":"pin;L298N IN3","Condition":"L98NMOTORS_ENABLED=2"}
+#define L98N_in8 2 //{"Name":"L98N_in8","Title":"IN4 digital pin","DefaultValue":"2","Type":"pin;L298N IN4","Condition":"L98NMOTORS_ENABLED=2"}
 #include "SHShakeitL298N.h"
-SHShakeitL298N shShakeitL298N;
+SHShakeitL298N shShakeitL298N_1, shShakeitL298N_2;
+SHShakeitL298N *SHShakeitL298NBoards[] = {&shShakeitL298N_1, &shShakeitL298N_2};
 #endif
 
 // -------------------- SHAKEIT PWM OUTPUT ----------------------------------------------------------------
@@ -1098,7 +1107,10 @@ void setup()
 	shShakeitAdaMotorShieldV2.begin(ADAMOTORS_SHIELDSCOUNT, ADAMOTORS_FREQ);
 #endif
 #ifdef INCLUDE_SHAKEITL298N
-	shShakeitL298N.begin(L98N_enA, L98N_enB, L98N_in1, L98N_in2, L98N_in3, L98N_in4);
+	if (L98NMOTORS_ENABLED > 0)
+		SHShakeitL298NBoards[0]->begin("L298N_01", L98N_enA, L98N_enB, L98N_in1, L98N_in2, L98N_in3, L98N_in4);
+	if (L98NMOTORS_ENABLED > 1)
+		SHShakeitL298NBoards[1]->begin("L298N_02", L98N_enC, L98N_enD, L98N_in5, L98N_in6, L98N_in7, L98N_in8);
 #endif
 #ifdef INCLUDE_SHAKEITMOTOMONSTER
 	shShakeitMotoMonster.begin(MOTOMONSTER_REVERSEDIRECTION);
@@ -1202,7 +1214,10 @@ unsigned long lastSerialActivity = 0;
 void loop()
 {
 #ifdef INCLUDE_SHAKEITL298N
-	shShakeitL298N.safetyCheck();
+	if (L98NMOTORS_ENABLED > 0)
+		SHShakeitL298NBoards[0]->safetyCheck();
+	if (L98NMOTORS_ENABLED > 1)
+		SHShakeitL298NBoards[1]->safetyCheck();
 #endif
 #ifdef INCLUDE_SHAKEITMOTOMONSTER
 	shShakeitMotoMonster.safetyCheck();
